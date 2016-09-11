@@ -1,6 +1,5 @@
-[droko-agent](https://graphing.it)
-
 ## Introduction
+[Website](https://graphing.it)
 
 droko-agent is the custom agent responsible for collecting timeseries measurements, packaged in json and sends them off to (https://graphing.it) for storage and visualization. 
 Written in Python (compatible with Python 2.7 and 3.x), it uses the sleekxmpp XMPP library to connect with graphing.it for its communication and transport layer. 
