@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# droko    Droko Agent
+#
+# chkconfig: 345 90 30
+# description: Droko is a metrics collection agent, sending data to graphing.it
+# processname: droko-agent.py
+
+### BEGIN INIT INFO
+# Provides:          droko
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start droko daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+
+# Source function library.
+#. /etc/init.d/functions
+
+start() {
+    echo "Starting droko agent..."
+    kill -9 $(ps ax | grep -i [/]usr/share/droko-agent | grep -v grep | grep -v upgrade | awk '{print $1}') > /dev/null 2> /dev/null
+
+    if [ $(whoami) == 'root' ]
+    then
+        su - -l -s /bin/bash droko -c "nohup /usr/share/droko-agent/droko-agent.py > /dev/null 2> /dev/null &"
+    else
+        /bin/bash -c "nohup /usr/share/droko-agent/droko-agent.py > /dev/null 2> /dev/null &"
+    fi
+}
+
+stop() {
+    echo "Stopping droko agent..."
+    kill -9 $(ps ax | grep -i [/]usr/share/droko-agent | grep -v grep | grep -v upgrade | awk '{print $1}') > /dev/null 2> /dev/null
+}
+
+status() {
+    ps ax | grep -i [d]roko-agent.py | grep -v grep > /dev/null 2> /dev/null
+    if [ $? -eq 0 ]
+    then
+        PID=$(ps ax | grep -i [d]roko-agent.py | grep -v grep | awk '{print $1}')
+        echo "droko agent is running... PID: ${PID}"
+    else
+        echo "droko agent is not running..."
+    fi
+
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: <servicename> {start|stop|status|restart]"
+        exit 1
+        ;;
+esac
+exit $?

@@ -1,0 +1,17 @@
+[Unit]
+Description=Droko is an agent that collects metrics in time-series format, and sending them to graphing.it for visualization
+Documentation=https://graphing.it/documentation/
+After=network.target
+
+[Service]
+User=droko
+Group=droko
+LimitNOFILE=65536
+ExecStart=/usr/share/droko-agent/droko-agent.py
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=droko-agent.service
+

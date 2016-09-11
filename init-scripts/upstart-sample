@@ -1,0 +1,22 @@
+description "droko agent"
+author      "Graphing.it"
+
+start on filesystem or runlevel [2345]
+stop on shutdown
+
+script
+    #kill -9 $(ps ax | grep -i [d]roko/python/bin/python3.4 | grep -v grep | awk '{print $1}') > /dev/null 2> /dev/null
+    kill -9 $(ps ax | grep -i [/]usr/share/droko-agent | grep -v grep | grep -v upgrade | awk '{print $1}') > /dev/null 2> /dev/null
+    
+    su - droko -c "/usr/share/droko/droko_client_sleek.py"
+end script
+
+pre-start script
+    echo ""
+end script
+
+pre-stop script
+    #kill -9 $(ps ax | grep -i [d]roko/python/bin/python3.4 | grep -v grep | awk '{print $1}') > /dev/null 2> /dev/null
+    kill -9 $(ps ax | grep -i [/]usr/share/droko-agent | grep -v grep | grep -v upgrade | awk '{print $1}') > /dev/null 2> /dev/null
+
+end script
